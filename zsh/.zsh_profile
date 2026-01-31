@@ -1,0 +1,43 @@
+export XDG_CONFIG_HOME=$HOME/.config
+VIM="nvim"
+
+
+## All that sweet sweet fzf
+# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export GIT_EDITOR=$VIM
+export DEV_ENV_HOME="$HOME/src"
+
+bindkey -s ^f "tmux-sessionizer\n"
+bindkey -s '\eh' "tmux-sessionizer -s 0\n"
+bindkey -s '\et' "tmux-sessionizer -s 1\n"
+bindkey -s '\en' "tmux-sessionizer -s 2\n"
+bindkey -s '\es' "tmux-sessionizer -s 3\n"
+
+catr() {
+    tail -n "+$1" $3 | head -n "$(($2 - $1 + 1))"
+}
+
+cat1Line() {
+    cat $1 | tr -d "\n"
+}
+
+
+addToPath() {
+    if [[ "$PATH" != *"$1"* ]]; then
+        export PATH=$PATH:$1
+    fi
+}
+
+addToPathFront() {
+    if [[ ! -z "$2" ]] || [[ "$PATH" != *"$1"* ]]; then
+        export PATH=$1:$PATH
+    fi
+}
+
+#addToPathFront $HOME/.local/apps
+#addToPathFront $HOME/.local/scripts
+#addToPathFront $HOME/.local/bin
+#addToPathFront $HOME/.local/apps/
+
+addToPath $HOME/.cargo/bin
