@@ -13,4 +13,3 @@ case "$env_tag" in
 esac
 
 tmux set -g status-style "bg=$bg,fg=$fg"
-

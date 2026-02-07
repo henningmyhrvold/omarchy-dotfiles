@@ -133,9 +133,13 @@ if type fzf-history-widget >/dev/null; then
 fi
 
 export EDITOR=nvim
-export XDG_SESSION_TYPE=wayland
+# NOTE: XDG_SESSION_TYPE=wayland removed — Omarchy's Hyprland env config handles this
 
-# fzf integration 
+# fzf integration
 if [[ -x /usr/bin/fzf ]]; then
   source <(fzf --zsh)
 fi
+
+# Source Omarchy's shell aliases (gcam, ff, zoxide, etc.) in zsh
+# The 2>/dev/null silences errors if any bash-only syntax sneaks in
+source ~/.local/share/omarchy/default/bash/aliases 2>/dev/null

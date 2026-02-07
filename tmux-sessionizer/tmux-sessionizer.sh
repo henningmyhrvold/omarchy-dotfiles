@@ -21,4 +21,3 @@ tmux send-keys   -t "$session:3" 'export APP_ENV=production' C-m
 tmux setw        -t "$session:3" @env 'prod'
 
 tmux select-window -t "$session:1"
-

@@ -1,0 +1,24 @@
+# REFERENCE ONLY — Not symlinked to ~/.config/ghostty/config
+# Omarchy's theme system manages the Ghostty config file.
+# Non-theme settings are injected by the Ansible ghostty role via lineinfile.
+# See: omarchy-playbook/roles/ghostty/tasks/main.yml
+#
+# Original config before Omarchy migration:
+
+# one theme
+theme = Rose Pine Moon
+
+background = 000000
+background-opacity = 0.85
+background-blur = false
+confirm-close-surface=false
+
+shell-integration-features = no-cursor,no-sudo,no-title
+gtk-titlebar = false
+
+# what is a prefix?
+# keybind = ctrl+d=scroll_page_fractional:0.5
+# keybind = ctrl+u=scroll_page_fractional:-0.5
+
+# Disable Ctrl+Enter fullscreen keybind
+keybind = ctrl+enter=unbind
