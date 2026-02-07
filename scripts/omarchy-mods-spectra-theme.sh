@@ -4,13 +4,13 @@ set -e
 # Customize Omarchy Spectre Theme
 # Modifies Hyprland blur settings in the Spectre theme
 
-THEME_DIR="$HOME/.config/omarchy/themes/spectre"
+THEME_DIR="$HOME/.config/omarchy/themes/spectra"
 HYPRLAND_CONF="$THEME_DIR/hyprland.conf"
 GHOSTTY_CONF="$THEME_DIR/ghostty.conf"
 
 # Check if the theme directory exists
 if [ ! -d "$THEME_DIR" ]; then
-    echo "Error: Omarchy Spectre theme directory not found at $THEME_DIR"
+    echo "Error: Omarchy Spectra theme directory not found at $THEME_DIR"
     exit 1
 fi
 
@@ -26,7 +26,7 @@ if [ ! -f "$GHOSTTY_CONF" ]; then
     exit 1
 fi
 
-echo "Customizing Omarchy Spectre theme configs..."
+echo "Customizing Omarchy Spectra theme configs..."
 
 # Create backups
 HYPRLAND_BACKUP="$HYPRLAND_CONF.backup-$(date +%Y%m%d-%H%M%S)"
