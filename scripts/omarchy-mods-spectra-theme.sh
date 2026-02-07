@@ -4,7 +4,7 @@ set -e
 # Customize Omarchy Spectre Theme
 # Modifies Hyprland blur settings in the Spectre theme
 
-THEME_DIR="$HOME/.config/omarchy/themes/spectre"
+THEME_DIR="$HOME/.config/omarchy/themes/spectra/"
 HYPRLAND_CONF="$THEME_DIR/hyprland.conf"
 
 # Check if the theme directory exists
