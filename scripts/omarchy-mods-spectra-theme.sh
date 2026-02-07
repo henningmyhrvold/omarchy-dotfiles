@@ -6,10 +6,11 @@ set -e
 
 THEME_DIR="$HOME/.config/omarchy/themes/spectra"
 HYPRLAND_CONF="$THEME_DIR/hyprland.conf"
+GHOSTTY_CONF="$THEME_DIR/ghostty.conf"
 
 # Check if the theme directory exists
 if [ ! -d "$THEME_DIR" ]; then
-    echo "Error: Omarchy Spectre theme directory not found at $THEME_DIR"
+    echo "Error: Omarchy Spectra theme directory not found at $THEME_DIR"
     exit 1
 fi
 
@@ -19,12 +20,26 @@ if [ ! -f "$HYPRLAND_CONF" ]; then
     exit 1
 fi
 
-echo "Customizing Omarchy Spectre theme Hyprland config..."
+# Check if ghostty.conf exists
+if [ ! -f "$GHOSTTY_CONF" ]; then
+    echo "Error: Ghostty config not found at $GHOSTTY_CONF"
+    exit 1
+fi
 
-# Create backup
-BACKUP="$HYPRLAND_CONF.backup-$(date +%Y%m%d-%H%M%S)"
-cp "$HYPRLAND_CONF" "$BACKUP"
-echo "Backup created: $BACKUP"
+echo "Customizing Omarchy Spectra theme configs..."
+
+# Create backups
+HYPRLAND_BACKUP="$HYPRLAND_CONF.backup-$(date +%Y%m%d-%H%M%S)"
+GHOSTTY_BACKUP="$GHOSTTY_CONF.backup-$(date +%Y%m%d-%H%M%S)"
+
+cp "$HYPRLAND_CONF" "$HYPRLAND_BACKUP"
+echo "Hyprland backup created: $HYPRLAND_BACKUP"
+
+cp "$GHOSTTY_CONF" "$GHOSTTY_BACKUP"
+echo "Ghostty backup created: $GHOSTTY_BACKUP"
+
+echo ""
+echo "==> Modifying Hyprland config..."
 
 # Use sed to modify the blur settings
 # This preserves the file structure and only changes specific values
@@ -40,12 +55,27 @@ sed -i \
 # Add vibrancy_darkness if it doesn't exist (insert after vibrancy line)
 if ! grep -q "vibrancy_darkness" "$HYPRLAND_CONF"; then
     sed -i '/^\s*vibrancy = 0\.5$/a\        vibrancy_darkness = 0.4' "$HYPRLAND_CONF"
-    echo "Added vibrancy_darkness = 0.4"
+    echo "  • Added vibrancy_darkness = 0.4"
 fi
 
-echo "✓ Hyprland config updated successfully"
+echo "✓ Hyprland config updated"
+
 echo ""
-echo "Changes made:"
+echo "==> Modifying Ghostty config..."
+
+# Modify Ghostty settings
+sed -i \
+    -e 's/^background-opacity = 0\.6$/background-opacity = 0.95/' \
+    -e 's/^font-size = 11$/font-size = 12/' \
+    "$GHOSTTY_CONF"
+
+echo "✓ Ghostty config updated"
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  Omarchy Spectra Theme Customization Complete!"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "HYPRLAND CHANGES:"
 echo "  • blur.size: 4 → 6"
 echo "  • blur.contrast: 1.0 → 1.5"
 echo "  • blur.vibrancy: 0.1 → 0.5"
@@ -54,5 +84,15 @@ echo "  • blur.noise: 0.01 → 0.04"
 echo "  • blur.ignore_opacity: false → true"
 echo "  • inactive_opacity: 0.95 → 0.9"
 echo ""
-echo "To apply changes, reload Hyprland (Super+Shift+R or restart)"
-echo "To revert, restore from backup: cp $BACKUP $HYPRLAND_CONF"
+echo "GHOSTTY CHANGES:"
+echo "  • background-opacity: 0.6 → 0.95"
+echo "  • font-size: 11 → 12"
+echo ""
+echo "TO APPLY:"
+echo "  • Hyprland: Press Super+Shift+R or restart"
+echo "  • Ghostty: Restart the terminal"
+echo ""
+echo "TO REVERT:"
+echo "  cp $HYPRLAND_BACKUP $HYPRLAND_CONF"
+echo "  cp $GHOSTTY_BACKUP $GHOSTTY_CONF"
+echo ""
