@@ -60,16 +60,16 @@ if ! grep -q "vibrancy_darkness" "$HYPRLAND_CONF"; then
     echo "  • Added vibrancy_darkness = 0.4"
 fi
 
-# Set touchpad natural scroll to true (Mac-style scrolling)
+# Set touchpad natural scroll to false (Mac-style scrolling)
 if grep -q "natural_scroll" "$HYPRLAND_CONF"; then
-    # Update existing setting to true
-    sed -i 's/^\(\s*\)natural_scroll.*$/\1natural_scroll = true/' "$HYPRLAND_CONF"
-    echo "  • Set touchpad scroll: natural_scroll = true"
+    # Update existing setting to false
+    sed -i 's/^\(\s*\)natural_scroll.*$/\1natural_scroll = false/' "$HYPRLAND_CONF"
+    echo "  • Set touchpad scroll: natural_scroll = false"
 else
     # Add natural_scroll setting in the input section
     if grep -q "input {" "$HYPRLAND_CONF"; then
-        sed -i '/input {/a\    touchpad {\n        natural_scroll = true\n    }' "$HYPRLAND_CONF"
-        echo "  • Added touchpad natural_scroll = true"
+        sed -i '/input {/a\    touchpad {\n        natural_scroll = false\n    }' "$HYPRLAND_CONF"
+        echo "  • Added touchpad natural_scroll = false"
     else
         echo "  ⚠ Could not find input section to add natural_scroll"
     fi
@@ -83,7 +83,7 @@ echo "==> Modifying Ghostty config..."
 # Modify Ghostty settings
 sed -i \
     -e 's/^background-opacity = 0\.6$/background-opacity = 0.95/' \
-    -e 's/^font-size = 11$/font-size = 11/' \
+    -e 's/^font-size = 11$/font-size = 10/' \
     "$GHOSTTY_CONF"
 
 # Add command = zsh if it doesn't exist (to launch zsh instead of bash)
