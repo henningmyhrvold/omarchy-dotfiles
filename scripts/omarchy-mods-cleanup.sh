@@ -21,7 +21,7 @@ find_app_bindings() {
     # Define webapp URL patterns
     local webapp_domains=""
     case "$app_lower" in
-        "hey") webapp_domains="app.hey.com|hey.com" ;;
+        "hey"|"HEY") webapp_domains="app.hey.com|hey.com" ;;
         "basecamp") webapp_domains="basecamp.com|3.basecamp.com" ;;
         "whatsapp") webapp_domains="web.whatsapp.com|whatsapp.com" ;;
         "google photos"|"google-photos") webapp_domains="photos.google.com" ;;
@@ -41,28 +41,31 @@ find_app_bindings() {
         if [[ "$line" =~ ^bindd[[:space:]]*= ]]; then
             local line_lower=$(echo "$line" | tr '[:upper:]' '[:lower:]')
 
-            # Check for app matches
-            if [[ "$line_lower" =~ uwsm[[:space:]]+app[[:space:]]+--[[:space:]]+$app_lower([[:space:]]|$) ]]; then
+            # Check for different matching patterns
+            # 1. Match omarchy-launch-or-focus with app name
+            if [[ "$line_lower" =~ omarchy-launch-or-focus[[:space:]]+$app_lower([[:space:]]|$) ]]; then
                 echo "$line"
+            # 2. Match omarchy-launch-or-focus with regex pattern (e.g., ^obsidian$)
+            elif [[ "$line_lower" =~ omarchy-launch-or-focus[[:space:]]+\^?$app_lower\$? ]]; then
+                echo "$line"
+            # 3. Match uwsm-app -- with app name
+            elif [[ "$line_lower" =~ uwsm-app[[:space:]]+--[[:space:]]+$app_lower([[:space:]]|$) ]]; then
+                echo "$line"
+            # 4. Match terminal launches
             elif [[ "$line_lower" =~ \$terminal[[:space:]]+-e[[:space:]]+$app_lower([[:space:]]|$) ]]; then
                 echo "$line"
+            # 5. Match webapp launches with URL patterns
             elif [[ "$line_lower" =~ omarchy-launch-webapp ]]; then
                 if [[ -n "$webapp_domains" ]]; then
-                    if [[ "$line" =~ omarchy-launch-webapp[[:space:]]+\"([^\"]+)\" ]]; then
+                    # Extract URL from the line (handling quotes)
+                    if [[ "$line" =~ \"([^\"]+)\" ]]; then
                         local url="${BASH_REMATCH[1]}"
-                        if [[ "$url" =~ ($webapp_domains) ]]; then
+                        url_lower=$(echo "$url" | tr '[:upper:]' '[:lower:]')
+                        if [[ "$url_lower" =~ ($webapp_domains) ]]; then
                             echo "$line"
                         fi
                     fi
                 fi
-            elif [[ "$app_lower" == "1password" ]] && [[ "$line_lower" =~ 1password ]]; then
-                echo "$line"
-            elif [[ "$app_lower" == "alacritty" ]] && [[ "$line_lower" =~ alacritty ]]; then
-                echo "$line"
-            elif [[ "$app_lower" == "spotify" ]] && [[ "$line_lower" =~ spotify ]]; then
-                echo "$line"
-            elif [[ "$app_lower" == "obsidian" ]] && [[ "$line_lower" =~ obsidian ]]; then
-                echo "$line"
             fi
         fi
     done < "$BINDINGS_FILE" | sort -u
@@ -262,8 +265,8 @@ apps_to_check=(
     "1password" "alacritty" "fizzy" "kdenlive" "libreoffice-still"
     "localsend" "obs-studio" "obsidian" "pinta" "spotify"
     "typora" "wiremix" "xournalpp"
-    "basecamp" "figma" "google-contacts" "google-messages"
-    "google-photos" "hey" "whatsapp" "zoom"
+    "Basecamp" "Figma" "Google Contacts" "Google Messages"
+    "Google Photos" "HEY" "WhatsApp" "Zoom"
 )
 
 for app in "${apps_to_check[@]}"; do
@@ -309,6 +312,7 @@ remove_webapp() {
         rm -f "$webapp_file"
         # Also remove from config if it exists
         rm -rf "$HOME/.config/${webapp}" 2>/dev/null || true
+        echo "  ✓ Removed: $webapp"
     else
         echo "  ℹ Webapp $webapp not found, skipping"
     fi
@@ -332,14 +336,14 @@ remove_package "xournalpp" "Xournal++"
 
 echo ""
 echo "━━━ Removing Web Apps ━━━"
-remove_webapp "basecamp" "Basecamp"
-remove_webapp "figma" "Figma"
-remove_webapp "google-contacts" "Google Contacts"
-remove_webapp "google-messages" "Google Messenger"
-remove_webapp "google-photos" "Google Photos"
-remove_webapp "hey" "Hey email"
-remove_webapp "whatsapp" "WhatsApp"
-remove_webapp "zoom" "Zoom"
+remove_webapp "Basecamp" "Basecamp"
+remove_webapp "Figma" "Figma"
+remove_webapp "Google Contacts" "Google Contacts"
+remove_webapp "Google Messages" "Google Messenger"
+remove_webapp "Google Photos" "Google Photos"
+remove_webapp "HEY" "Hey email"
+remove_webapp "WhatsApp" "WhatsApp"
+remove_webapp "Zoom" "Zoom"
 
 echo ""
 echo "━━━ Refreshing Application Menu ━━━"
