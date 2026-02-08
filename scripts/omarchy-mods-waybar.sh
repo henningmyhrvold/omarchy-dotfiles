@@ -2,9 +2,11 @@
 set -e
 
 # Change Waybar Menu Logo from Omarchy to Arch Linux
+# Replaces the Omarchy logo with the Arch Linux logo
 
 WAYBAR_CONFIG="$HOME/.config/waybar/config.jsonc"
 
+# Check if waybar config exists
 if [ ! -f "$WAYBAR_CONFIG" ]; then
     echo "Error: Waybar config not found at $WAYBAR_CONFIG"
     exit 1
@@ -14,12 +16,16 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "  Waybar Logo Replacement"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-
-echo "Current configuration:"
-grep -A 4 '"custom/omarchy"' "$WAYBAR_CONFIG"
+echo "This will replace the Omarchy logo with the Arch Linux logo"
+echo "Using Nerd Font Arch icon (already installed in Omarchy)"
 echo ""
 
-read -p "Replace Omarchy logo with Arch Linux logo? (y/N) " -n 1 -r
+# Show current configuration
+echo "Current configuration:"
+grep -A 4 '"custom/omarchy"' "$WAYBAR_CONFIG" || echo "  (custom/omarchy section not found)"
+echo ""
+
+read -p "Do you want to proceed? (y/N) " -n 1 -r
 echo ""
 
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -27,28 +33,40 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 0
 fi
 
-# Create backup
-cp "$WAYBAR_CONFIG" "${WAYBAR_CONFIG}.backup"
-echo "✓ Backup created: ${WAYBAR_CONFIG}.backup"
 echo ""
+echo "Replacing logo with Nerd Font Arch icon..."
 
-# Replace the icon
-# Current: "format": "",
-# Target:  "format": " ",
+new_format=' '
+logo_desc="Arch icon"
 
-sed -i '/"custom\/omarchy":/,/}/ s|"format": ""|"format": " "|' "$WAYBAR_CONFIG"
+# Create a sed command to replace the format line
+# Original: "format": "<span font='omarchy'></span>",
+# New: "format": "",
 
-echo "✓ Logo replaced!"
-echo ""
-echo "New configuration:"
-grep -A 4 '"custom/omarchy"' "$WAYBAR_CONFIG"
+sed -i.backup "/\"custom\/omarchy\":/,/},/ s|\"format\": \"<span font='omarchy'>.*</span>\"|\"format\": \"$new_format\"|" "$WAYBAR_CONFIG"
+
+# Verify the change was made
+if grep -q "\"format\": \"$new_format\"" "$WAYBAR_CONFIG"; then
+    echo "✓ Logo replaced successfully!"
+    echo ""
+    echo "Changed to: $logo_desc"
+    echo "Backup saved: ${WAYBAR_CONFIG}.backup"
+else
+    echo "⚠ Warning: Logo replacement might have failed"
+    echo "Please check the config manually"
+fi
+
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  Complete!"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "To apply changes, reload Waybar:"
+echo "To apply changes:"
 echo "  pkill waybar && waybar &"
 echo ""
-echo "Or press: Super+Shift+R"
+echo "Or reload Hyprland:"
+echo "  Super+Shift+R"
+echo ""
+echo "To revert:"
+echo "  mv ${WAYBAR_CONFIG}.backup $WAYBAR_CONFIG"
 echo ""
