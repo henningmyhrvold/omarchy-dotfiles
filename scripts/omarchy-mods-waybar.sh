@@ -25,16 +25,7 @@ echo "Current configuration:"
 grep -A 4 '"custom/omarchy"' "$WAYBAR_CONFIG" || echo "  (custom/omarchy section not found)"
 echo ""
 
-read -p "Do you want to proceed? (y/N) " -n 1 -r
-echo ""
-
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo "Aborted."
-    exit 0
-fi
-
-echo ""
-echo "Replacing logo with Nerd Font Arch icon..."
+echo "Replacing logo with Arch icon..."
 
 new_format=' '
 logo_desc="Arch icon"
