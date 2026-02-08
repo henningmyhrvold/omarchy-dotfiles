@@ -28,6 +28,7 @@ find_app_bindings() {
         "google contacts"|"google-contacts") webapp_domains="contacts.google.com" ;;
         "google messages"|"google-messages"|"google messenger") webapp_domains="messages.google.com" ;;
         "figma") webapp_domains="figma.com" ;;
+        "fizzy") webapp_domains="app.fizzy.do|fizzy.do" ;;
         "zoom") webapp_domains="zoom.us|zoom.com" ;;
     esac
 
@@ -66,6 +67,9 @@ find_app_bindings() {
                         fi
                     fi
                 fi
+            # 6. Special case for 1password-beta (matches 1password in bindings)
+            elif [[ "$app_lower" == "1password-beta" ]] && [[ "$line_lower" =~ 1password ]]; then
+                echo "$line"
             fi
         fi
     done < "$BINDINGS_FILE" | sort -u
@@ -126,7 +130,7 @@ cat << 'EOF'
 RECOMMENDED FOR REMOVAL:
 ========================
 
-✗ 1Password (1password)
+✗ 1Password (1password-beta)
   Purpose: Password manager
   Why included: Popular enterprise password manager
   Recommendation: REMOVE - Only needed if you use 1Password service
@@ -146,7 +150,7 @@ RECOMMENDED FOR REMOVAL:
   Why included: Popular design tool
   Recommendation: REMOVE - Only needed for designers
 
-✗ Fizzy (fizzy)
+✗ Fizzy (webapp)
   Purpose: Chat/messaging client
   Why included: Modern messaging app
   Recommendation: REMOVE - Not widely used
@@ -262,10 +266,10 @@ all_bindings_to_remove=()
 
 # List of all apps and webapps we're removing
 apps_to_check=(
-    "1password" "alacritty" "fizzy" "kdenlive" "libreoffice-still"
+    "1password-beta" "alacritty" "kdenlive" "libreoffice-still"
     "localsend" "obs-studio" "obsidian" "pinta" "spotify"
     "typora" "wiremix" "xournalpp"
-    "Basecamp" "Figma" "Google Contacts" "Google Messages"
+    "Basecamp" "Figma" "Fizzy" "Google Contacts" "Google Messages"
     "Google Photos" "HEY" "WhatsApp" "Zoom"
 )
 
@@ -320,9 +324,8 @@ remove_webapp() {
 
 # Remove packages
 echo "━━━ Removing Packages ━━━"
-remove_package "1password" "1Password"
+remove_package "1password-beta" "1Password"
 remove_package "alacritty" "Alacritty terminal"
-remove_package "fizzy" "Fizzy messenger"
 remove_package "kdenlive" "Kdenlive video editor"
 remove_package "libreoffice-still" "LibreOffice (old version)"
 remove_package "localsend" "LocalSend file sharing"
@@ -338,6 +341,7 @@ echo ""
 echo "━━━ Removing Web Apps ━━━"
 remove_webapp "Basecamp" "Basecamp"
 remove_webapp "Figma" "Figma"
+remove_webapp "Fizzy" "Fizzy"
 remove_webapp "Google Contacts" "Google Contacts"
 remove_webapp "Google Messages" "Google Messenger"
 remove_webapp "Google Photos" "Google Photos"
