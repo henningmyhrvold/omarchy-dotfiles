@@ -1,5 +1,3 @@
-exec 2> >(tee -a /tmp/zsh-init-debug.log >&2)
-set -x
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
