@@ -83,7 +83,7 @@ echo "==> Modifying Ghostty config..."
 # Modify Ghostty settings
 sed -i \
     -e 's/^background-opacity = 0\.6$/background-opacity = 0.95/' \
-    -e 's/^font-size = 11$/font-size = 12/' \
+    -e 's/^font-size = 11$/font-size = 11/' \
     "$GHOSTTY_CONF"
 
 # Add command = zsh if it doesn't exist (to launch zsh instead of bash)

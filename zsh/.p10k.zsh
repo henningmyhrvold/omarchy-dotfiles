@@ -103,8 +103,8 @@
     taskwarrior             # taskwarrior task count (https://taskwarrior.org/)
     per_directory_history   # Oh My Zsh per-directory-history local/global indicator
     # cpu_arch              # CPU architecture
-    time                    # current time
     ip                      # ip address and bandwidth usage for a specified network interface
+    time                    # current time
     # public_ip             # public IP address
     # proxy                 # system-wide http/https/ftp proxy
     # battery               # internal battery
@@ -1681,7 +1681,7 @@
 
   ###########[ ip: ip address and bandwidth usage for a specified network interface ]###########
   # IP color.
-  typeset -g POWERLEVEL9K_IP_BACKGROUND=4
+  typeset -g POWERLEVEL9K_IP_BACKGROUND=6
   typeset -g POWERLEVEL9K_IP_FOREGROUND=0
   # The following parameters are accessible within the expansion:
   #
@@ -1695,7 +1695,7 @@
   #   P9K_IP_TX_BYTES_DELTA | number of bytes sent since last prompt
   #   P9K_IP_RX_RATE        | receive rate (since last prompt)
   #   P9K_IP_TX_RATE        | send rate (since last prompt)
-  typeset -g POWERLEVEL9K_IP_CONTENT_EXPANSION='${P9K_IP_RX_RATE:+⇣$P9K_IP_RX_RATE }${P9K_IP_TX_RATE:+⇡$P9K_IP_TX_RATE }$P9K_IP_IP'
+  typeset -g POWERLEVEL9K_IP_CONTENT_EXPANSION='$P9K_IP_IP'
   # Show information for the first network interface whose name matches this regular expression.
   # Run `ifconfig` or `ip -4 a show` to see the names of all network interfaces.
   typeset -g POWERLEVEL9K_IP_INTERFACE='[ew].*'
