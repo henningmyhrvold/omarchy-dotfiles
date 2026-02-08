@@ -131,8 +131,7 @@ if type fzf-history-widget >/dev/null; then
   bindkey '^R' fzf-history-widget
 fi
 
-export EDITOR=nvim
-# NOTE: XDG_SESSION_TYPE=wayland removed — Omarchy's Hyprland env config handles this
+# export EDITOR=nvim
 
 # fzf integration
 if [[ -x /usr/bin/fzf ]]; then
