@@ -4,13 +4,13 @@ set -e
 # Customize Omarchy Spectre Theme
 # Modifies Hyprland blur settings in the Spectre theme
 
-THEME_DIR="$HOME/.config/omarchy/themes/spectra"
+THEME_DIR="$HOME/.config/omarchy/themes/spectre"
 HYPRLAND_CONF="$THEME_DIR/hyprland.conf"
 GHOSTTY_CONF="$THEME_DIR/ghostty.conf"
 
 # Check if the theme directory exists
 if [ ! -d "$THEME_DIR" ]; then
-    echo "Error: Omarchy Spectra theme directory not found at $THEME_DIR"
+    echo "Error: Omarchy Spectre theme directory not found at $THEME_DIR"
     exit 1
 fi
 
@@ -26,7 +26,7 @@ if [ ! -f "$GHOSTTY_CONF" ]; then
     exit 1
 fi
 
-echo "Customizing Omarchy Spectra theme configs..."
+echo "Customizing Omarchy Spectre theme configs..."
 
 # Create backups
 HYPRLAND_BACKUP="$HYPRLAND_CONF.backup-$(date +%Y%m%d-%H%M%S)"
@@ -60,18 +60,44 @@ if ! grep -q "vibrancy_darkness" "$HYPRLAND_CONF"; then
     echo "  • Added vibrancy_darkness = 0.4"
 fi
 
-# Set touchpad natural scroll to false (Mac-style scrolling)
+# Set touchpad natural scroll to yes (Mac-style scrolling)
 if grep -q "natural_scroll" "$HYPRLAND_CONF"; then
-    # Update existing setting to false
-    sed -i 's/^\(\s*\)natural_scroll.*$/\1natural_scroll = false/' "$HYPRLAND_CONF"
-    echo "  • Set touchpad scroll: natural_scroll = false"
+    # Update existing setting to yes
+    sed -i 's/^\(\s*\)natural_scroll.*$/\1natural_scroll = yes/' "$HYPRLAND_CONF"
+    echo "  • Set touchpad scroll: natural_scroll = yes"
 else
-    # Add natural_scroll setting in the input section
-    if grep -q "input {" "$HYPRLAND_CONF"; then
-        sed -i '/input {/a\    touchpad {\n        natural_scroll = false\n    }' "$HYPRLAND_CONF"
-        echo "  • Added touchpad natural_scroll = false"
+    # Add natural_scroll setting in the touchpad section
+    if grep -q "touchpad {" "$HYPRLAND_CONF"; then
+        sed -i '/touchpad {/a\        natural_scroll = yes' "$HYPRLAND_CONF"
+        echo "  • Added touchpad natural_scroll = yes"
     else
-        echo "  ⚠ Could not find input section to add natural_scroll"
+        echo "  ⚠ Could not find touchpad section to add natural_scroll"
+    fi
+fi
+
+# Set keyboard layout to us,no with Alt+Shift toggle
+if grep -q "kb_layout" "$HYPRLAND_CONF"; then
+    # Update existing kb_layout
+    sed -i 's/^\(\s*\)kb_layout.*$/\1kb_layout = us,no/' "$HYPRLAND_CONF"
+    echo "  • Set keyboard layout: kb_layout = us,no"
+else
+    # Add kb_layout in input section
+    if grep -q "input {" "$HYPRLAND_CONF"; then
+        sed -i '/input {/a\    kb_layout = us,no' "$HYPRLAND_CONF"
+        echo "  • Added keyboard layout: kb_layout = us,no"
+    fi
+fi
+
+# Set keyboard options for layout switching
+if grep -q "kb_options" "$HYPRLAND_CONF"; then
+    # Update existing kb_options
+    sed -i 's/^\(\s*\)kb_options.*$/\1kb_options = grp:alt_shift_toggle/' "$HYPRLAND_CONF"
+    echo "  • Set keyboard options: kb_options = grp:alt_shift_toggle"
+else
+    # Add kb_options in input section (after kb_layout)
+    if grep -q "kb_layout = us,no" "$HYPRLAND_CONF"; then
+        sed -i '/kb_layout = us,no/a\    kb_options = grp:alt_shift_toggle' "$HYPRLAND_CONF"
+        echo "  • Added keyboard options: kb_options = grp:alt_shift_toggle"
     fi
 fi
 
@@ -83,7 +109,7 @@ echo "==> Modifying Ghostty config..."
 # Modify Ghostty settings
 sed -i \
     -e 's/^background-opacity = 0\.6$/background-opacity = 0.95/' \
-    -e 's/^font-size = 11$/font-size = 10/' \
+    -e 's/^font-size = 11$/font-size = 12/' \
     "$GHOSTTY_CONF"
 
 # Add command = zsh if it doesn't exist (to launch zsh instead of bash)
@@ -115,7 +141,9 @@ echo "  • blur.ignore_opacity: false → true"
 echo "  • inactive_opacity: 0.95 → 0.9"
 echo "  • gaps_in: 4 → 2"
 echo "  • gaps_out: 8 → 4"
-echo "  • touchpad natural_scroll: set to true (Mac-style)"
+echo "  • touchpad natural_scroll: set to yes (Mac-style)"
+echo "  • keyboard layout: kb_layout = us,no"
+echo "  • keyboard options: kb_options = grp:alt_shift_toggle (Alt+Shift to switch)"
 echo ""
 echo "GHOSTTY CHANGES:"
 echo "  • background-opacity: 0.6 → 0.95"

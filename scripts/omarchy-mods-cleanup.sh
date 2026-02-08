@@ -140,6 +140,11 @@ RECOMMENDED FOR REMOVAL:
   Why included: Fast, minimal terminal alternative
   Recommendation: REMOVE - You use Ghostty
 
+✗ Hardware Locality Lstopo (hwloc)
+  Purpose: CPU/memory topology visualization for HPC
+  Why included: Performance optimization tool
+  Recommendation: REMOVE - Only needed for HPC/server optimization
+
 ✗ Basecamp (webapp)
   Purpose: Project management web app
   Why included: Made by 37signals (Omarchy creators)
@@ -326,6 +331,7 @@ remove_webapp() {
 echo "━━━ Removing Packages ━━━"
 remove_package "1password-beta" "1Password"
 remove_package "alacritty" "Alacritty terminal"
+remove_package "hwloc" "Hardware Locality (lstopo)"
 remove_package "kdenlive" "Kdenlive video editor"
 remove_package "libreoffice-still" "LibreOffice (old version)"
 remove_package "localsend" "LocalSend file sharing"
@@ -336,6 +342,32 @@ remove_package "spotify" "Spotify"
 remove_package "typora" "Typora markdown editor"
 remove_package "wiremix" "Wiremix audio"
 remove_package "xournalpp" "Xournal++"
+
+echo ""
+echo "━━━ Cleaning Up Orphaned Desktop Files ━━━"
+# Remove any leftover .desktop files from removed packages
+orphaned_desktop_files=(
+    "typora" "obsidian" "spotify" "pinta" "kdenlive"
+    "obs" "obs-studio" "xournalpp" "wiremix" "localsend" "lstopo"
+)
+
+for app in "${orphaned_desktop_files[@]}"; do
+    # Check in system directory
+    for desktop_file in /usr/share/applications/*${app}*.desktop; do
+        if [ -f "$desktop_file" ]; then
+            echo "Removing system desktop file: $(basename $desktop_file)"
+            sudo rm -f "$desktop_file"
+        fi
+    done
+
+    # Check in user directory
+    for desktop_file in ~/.local/share/applications/*${app}*.desktop; do
+        if [ -f "$desktop_file" ]; then
+            echo "Removing user desktop file: $(basename $desktop_file)"
+            rm -f "$desktop_file"
+        fi
+    done
+done
 
 echo ""
 echo "━━━ Removing Web Apps ━━━"
@@ -353,6 +385,7 @@ echo ""
 echo "━━━ Refreshing Application Menu ━━━"
 # Refresh the application menu
 update-desktop-database ~/.local/share/applications 2>/dev/null || true
+sudo update-desktop-database /usr/share/applications 2>/dev/null || true
 
 # Remove keyboard shortcuts
 if [[ ${#all_bindings_to_remove[@]} -gt 0 ]]; then
