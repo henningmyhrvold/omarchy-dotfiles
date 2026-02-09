@@ -49,6 +49,16 @@ fi
 
 echo ""
 
+# Change input trackpad and language to Arch Linux
+if [ -f "./omarchy-mods-hyprland-global.sh" ]; then
+    echo "Changing input trackpad and language..."
+    bash ./omarchy-mods-hyprland-global.sh
+else
+    echo "⚠ Warning: omarchy-mods-hyprland-global.sh not found, skipping"
+fi
+
+echo ""
+
 # Clean up unwanted applications
 if [ -f "./omarchy-mods-cleanup.sh" ]; then
     echo "Cleaning up unwanted software..."
