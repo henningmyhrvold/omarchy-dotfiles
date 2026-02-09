@@ -143,7 +143,7 @@ RECOMMENDED FOR REMOVAL:
 ✗ Hardware Locality Lstopo (hwloc)
   Purpose: CPU/memory topology visualization for HPC
   Why included: Performance optimization tool
-  Recommendation: REMOVE - Only needed for HPC/server optimization
+  Recommendation: HIDE from menu only (package is dependency of onetbb)
 
 ✗ Basecamp (webapp)
   Purpose: Project management web app
@@ -244,11 +244,12 @@ RECOMMENDED FOR REMOVAL:
 KEEP (NOT REMOVED):
 ===================
 
-✓ Aether - Unknown package, needs investigation
+✓ Aether - Theme creator tool (hidden from menu, accessible via command)
 ✓ Document Viewer (evince) - Useful for viewing PDFs
 ✓ Image Viewer (loupe/eog) - Essential for viewing images
 ✓ Media Player (mpv/vlc) - Essential for video playback
-✓ Limine Snapper Restore - System recovery tool (KEEP!)
+✓ LibreOffice - Office suite (hidden from menu, accessible via command)
+✓ Limine Snapper Restore - System recovery tool (hidden from menu, CRITICAL for recovery!)
 
 EOF
 
@@ -331,7 +332,6 @@ remove_webapp() {
 echo "━━━ Removing Packages ━━━"
 remove_package "1password-beta" "1Password"
 remove_package "alacritty" "Alacritty terminal"
-remove_package "hwloc" "Hardware Locality (lstopo)"
 remove_package "kdenlive" "Kdenlive video editor"
 remove_package "libreoffice-still" "LibreOffice (old version)"
 remove_package "localsend" "LocalSend file sharing"
@@ -346,10 +346,16 @@ remove_package "xournalpp" "Xournal++"
 echo ""
 echo "━━━ Cleaning Up Orphaned Desktop Files ━━━"
 # Remove any leftover .desktop files from removed packages
+# Note: hwloc is kept as a package (dependency of onetbb) but hidden from menu
+# Note: aether, libreoffice, limine-snapper-restore are hidden from menu but kept as packages
 orphaned_desktop_files=(
     "typora" "obsidian" "spotify" "pinta" "kdenlive"
-    "obs" "obs-studio" "xournalpp" "wiremix" "localsend" "lstopo"
+    "obs" "obs-studio" "xournalpp" "wiremix" "localsend"
+    "lstopo" "hwloc" "aether" "libreoffice" "limine" "snapper"
 )
+
+echo "Hiding Hardware Locality (lstopo) from menu (keeping package as it's a dependency)"
+echo "Hiding Aether, LibreOffice, and Limine Snapper Restore from menu (keeping packages)"
 
 for app in "${orphaned_desktop_files[@]}"; do
     # Check in system directory
