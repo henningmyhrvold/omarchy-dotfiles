@@ -50,8 +50,8 @@ sed -i \
     -e 's/^\(\s*\)noise = 0\.01$/\1noise = 0.04/' \
     -e 's/^\(\s*\)ignore_opacity = false$/\1ignore_opacity = true/' \
     -e 's/^\(\s*\)inactive_opacity = 0\.95$/\1inactive_opacity = 0.9/' \
-    -e 's/^\(\s*\)gaps_in = 4$/\1gaps_in = 2/' \
-    -e 's/^\(\s*\)gaps_out = 8$/\1gaps_out = 4/' \
+    -e 's/^\(\s*\)gaps_in = 4$/\1gaps_in = 3/' \
+    -e 's/^\(\s*\)gaps_out = 8$/\1gaps_out = 3/' \
     "$HYPRLAND_CONF"
 
 # Add vibrancy_darkness if it doesn't exist (insert after vibrancy line)
