@@ -348,14 +348,30 @@ echo "━━━ Cleaning Up Orphaned Desktop Files ━━━"
 # Remove any leftover .desktop files from removed packages
 # Note: hwloc is kept as a package (dependency of onetbb) but hidden from menu
 # Note: aether, libreoffice, limine-snapper-restore are hidden from menu but kept as packages
-orphaned_desktop_files=(
-    "typora" "obsidian" "spotify" "pinta" "kdenlive"
-    "obs" "obs-studio" "xournalpp" "wiremix" "localsend"
-    "lstopo" "hwloc" "aether" "libreoffice" "limine" "snapper"
-)
 
 echo "Hiding Hardware Locality (lstopo) from menu (keeping package as it's a dependency)"
 echo "Hiding Aether, LibreOffice, and Limine Snapper Restore from menu (keeping packages)"
+
+# Use exact desktop file names
+exact_desktop_files=(
+    "/usr/share/applications/li.oever.aether.desktop"
+    "/usr/share/applications/libreoffice-startcenter.desktop"
+    "/usr/share/applications/limine-snapper-restore.desktop"
+)
+
+# Remove exact files first
+for desktop_file in "${exact_desktop_files[@]}"; do
+    if [ -f "$desktop_file" ]; then
+        echo "Removing: $(basename $desktop_file)"
+        sudo rm -f "$desktop_file"
+    fi
+done
+
+# Then check for any orphaned files from removed packages (wildcard)
+orphaned_desktop_files=(
+    "typora" "obsidian" "spotify" "pinta" "kdenlive"
+    "obs" "obs-studio" "xournalpp" "wiremix" "localsend" "lstopo" "hwloc"
+)
 
 for app in "${orphaned_desktop_files[@]}"; do
     # Check in system directory
