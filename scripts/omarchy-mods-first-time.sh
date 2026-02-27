@@ -7,9 +7,9 @@ omarchy-theme-install https://github.com/abhijeet-swami/omarchy-ayaka-theme
 sleep 3
 omarchy-theme-install https://github.com/JaxonWright/omarchy-midnight-theme
 sleep 3
-omarchy-theme-install https://github.com/bjarneo/omarchy-pulsar-theme
-sleep 3
 omarchy-theme-install https://github.com/abhijeet-swami/omarchy-spectra-theme
+sleep 3
+omarchy-theme-install https://github.com/bjarneo/omarchy-pulsar-theme
 sleep 3
 
 # Theme hook for additional theme support
@@ -58,14 +58,6 @@ else
 fi
 
 echo ""
-
-# Clean up unwanted applications
-if [ -f "./omarchy-mods-cleanup.sh" ]; then
-    echo "Cleaning up unwanted software..."
-    bash ./omarchy-mods-cleanup.sh
-else
-    echo "⚠ Warning: omarchy-mods-cleanup.sh not found, skipping"
-fi
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
