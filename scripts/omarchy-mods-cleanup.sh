@@ -274,7 +274,7 @@ all_bindings_to_remove=()
 apps_to_check=(
     "1password-beta" "alacritty" "kdenlive" "libreoffice-still"
     "localsend" "obs-studio" "obsidian" "pinta" "spotify"
-    "typora" "wiremix" "xournalpp"
+    "1password-cli" "typora" "wiremix" "xournalpp"
     "Basecamp" "Figma" "Fizzy" "Google Contacts" "Google Messages"
     "Google Photos" "HEY" "WhatsApp" "Zoom"
 )
