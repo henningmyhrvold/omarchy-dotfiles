@@ -141,3 +141,10 @@ fi
 # Source Omarchy's shell aliases (gcam, ff, zoxide, etc.) in zsh
 # The 2>/dev/null silences errors if any bash-only syntax sneaks in
 source ~/.local/share/omarchy/default/bash/aliases 2>/dev/null
+
+# Go environment
+export GOPATH="/home/henning/go"
+export GOBIN="/home/henning/go/bin"
+export PATH="/home/henning/go/bin:$PATH"
+# npm environment
+export PATH="/home/henning/.npm-global/bin:$PATH"
