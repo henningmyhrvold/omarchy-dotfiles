@@ -7,9 +7,9 @@ omarchy-theme-install https://github.com/abhijeet-swami/omarchy-ayaka-theme
 sleep 3
 omarchy-theme-install https://github.com/JaxonWright/omarchy-midnight-theme
 sleep 3
-omarchy-theme-install https://github.com/bjarneo/omarchy-pulsar-theme
-sleep 3
 omarchy-theme-install https://github.com/abhijeet-swami/omarchy-spectra-theme
+sleep 3
+omarchy-theme-install https://github.com/bjarneo/omarchy-pulsar-theme
 sleep 3
 
 # Theme hook for additional theme support
