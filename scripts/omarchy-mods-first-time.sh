@@ -60,6 +60,14 @@ fi
 echo ""
 
 # Clean up unwanted applications
+if [ -f "./omarchy-mods-branding.sh" ]; then
+    echo "Branding..."
+    bash ./omarchy-mods-branding.sh
+else
+    echo "⚠ Warning: omarchy-mods-branding.sh not found, skipping"
+fi
+
+# Clean up unwanted applications
 if [ -f "./omarchy-mods-cleanup.sh" ]; then
     echo "Cleaning up unwanted software..."
     bash ./omarchy-mods-cleanup.sh
