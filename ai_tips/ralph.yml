@@ -1,0 +1,20 @@
+# ralph.yml — Python Calculator project
+# ralph-orchestrator configuration
+
+agent: claude              # Use Claude Code as the inner agent
+prompt_file: PROMPT.md     # Ralph reads this every iteration
+max_iterations: 50         # Safety limit — calculator should finish in ~8-10
+max_runtime: 3600          # 1 hour max (very conservative for this project)
+verbose: true              # Show detailed output
+
+adapters:
+  claude:
+    enabled: true
+    timeout: 300            # 5 minutes per iteration max
+  gemini:
+    enabled: false
+  acp:
+    enabled: false
+    timeout: 300
+    tool_permissions:
+      permission_mode: auto_approve

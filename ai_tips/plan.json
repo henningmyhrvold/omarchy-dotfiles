@@ -1,0 +1,123 @@
+{
+  "project": "Python Calculator",
+  "version": "1.0.0",
+  "completion_marker": "TASK_COMPLETE",
+  "description": "A CLI calculator with add/sub/mul/div operations, full test coverage, and a README.",
+  "phases": [
+    {
+      "id": "phase-1",
+      "name": "Foundation",
+      "description": "Project structure, pyproject.toml, and core arithmetic functions",
+      "hard_stop": true,
+      "hard_stop_check": "python -m pytest tests/ -v",
+      "tasks": [
+        {
+          "id": "t001",
+          "category": "setup",
+          "description": "Create project directory structure and pyproject.toml",
+          "steps": [
+            "Create src/ directory",
+            "Create src/calculator/ directory",
+            "Create src/calculator/__init__.py (empty is fine)",
+            "Create tests/ directory",
+            "Create tests/__init__.py (empty is fine)",
+            "Create pyproject.toml with the structure from CLAUDE.md",
+            "Run: uv sync to install dev dependencies"
+          ],
+          "passes": false,
+          "verify": "ls src/calculator/__init__.py tests/__init__.py pyproject.toml && python -m pytest --collect-only 2>&1 | grep 'no tests ran'"
+        },
+        {
+          "id": "t002",
+          "category": "implementation",
+          "description": "Implement add, subtract, multiply, divide in src/calculator/core.py",
+          "steps": [
+            "Create src/calculator/core.py",
+            "Implement add(a: float, b: float) -> float",
+            "Implement subtract(a: float, b: float) -> float",
+            "Implement multiply(a: float, b: float) -> float",
+            "Implement divide(a: float, b: float) -> float — raise ZeroDivisionError if b == 0",
+            "Add type hints to all functions",
+            "Update src/calculator/__init__.py to export all four functions"
+          ],
+          "passes": false,
+          "verify": "python -c \"from src.calculator.core import add, subtract, multiply, divide; assert add(2,3)==5.0; assert subtract(5,3)==2.0; assert multiply(3,4)==12.0; assert divide(10,2)==5.0; print('core functions OK')\""
+        }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "name": "Testing",
+      "description": "Comprehensive pytest test suite with 100% coverage on core.py",
+      "hard_stop": true,
+      "hard_stop_check": "python -m pytest tests/ -v --cov=src/calculator --cov-report=term-missing 2>&1 | grep '100%'",
+      "tasks": [
+        {
+          "id": "t003",
+          "category": "testing",
+          "description": "Write pytest unit tests for all operations in tests/test_core.py",
+          "steps": [
+            "Create tests/test_core.py",
+            "Write test_add: test positive ints, negative ints, floats, adding zero",
+            "Write test_subtract: test positive result, negative result, same numbers",
+            "Write test_multiply: test positive, negative, multiply by zero, floats",
+            "Write test_divide: test positive result, decimal result, negative dividend",
+            "Write test_divide_by_zero: assert ZeroDivisionError is raised when b=0",
+            "Ensure ALL branches in core.py are covered"
+          ],
+          "passes": false,
+          "verify": "python -m pytest tests/test_core.py -v --tb=short && python -m pytest tests/ --cov=src/calculator/core --cov-report=term-missing 2>&1 | grep -E '(100%|PASSED)'"
+        }
+      ]
+    },
+    {
+      "id": "phase-3",
+      "name": "CLI Interface",
+      "description": "Command-line interface and project packaging",
+      "hard_stop": false,
+      "tasks": [
+        {
+          "id": "t004",
+          "category": "cli",
+          "description": "Implement CLI in src/calculator/cli.py",
+          "steps": [
+            "Create src/calculator/cli.py",
+            "Import argparse and the four functions from core",
+            "Create main() function",
+            "Add positional argument: operation (choices: add, sub, mul, div)",
+            "Add two positional arguments: a and b (type=float)",
+            "Map 'add' -> add(), 'sub' -> subtract(), 'mul' -> multiply(), 'div' -> divide()",
+            "For divide: catch ZeroDivisionError, print 'Error: division by zero' to stderr, sys.exit(1)",
+            "For invalid input: argparse will handle this automatically",
+            "Output ONLY the result as a float on stdout — nothing else",
+            "Add if __name__ == '__main__': main() at the bottom",
+            "Update src/calculator/__init__.py to include cli if needed"
+          ],
+          "passes": false,
+          "verify": "python -m calculator add 2 3 | grep -E '^5\\.0$' && python -m calculator div 10 0; test $? -eq 1 && echo CLI_OK"
+        },
+        {
+          "id": "t005",
+          "category": "documentation",
+          "description": "Write README.md",
+          "steps": [
+            "Create README.md",
+            "Add: Project title and one-line description",
+            "Add: Installation section (uv sync)",
+            "Add: CLI Usage section with examples for all four operations",
+            "Add: Library Usage section showing import and function calls",
+            "Add: Running Tests section",
+            "README must be at least 30 lines"
+          ],
+          "passes": false,
+          "verify": "test -f README.md && wc -l README.md | awk '{print ($1 >= 30)}' | grep 1 && echo README_OK"
+        }
+      ]
+    }
+  ],
+  "completion": {
+    "check": "python -m pytest tests/ -v && python -m calculator add 2 3",
+    "expected_output_contains": "5.0",
+    "marker": "TASK_COMPLETE"
+  }
+}
