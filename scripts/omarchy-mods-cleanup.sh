@@ -135,11 +135,6 @@ RECOMMENDED FOR REMOVAL:
   Why included: Popular enterprise password manager
   Recommendation: REMOVE - Only needed if you use 1Password service
 
-✗ Alacritty (alacritty)
-  Purpose: GPU-accelerated terminal emulator
-  Why included: Fast, minimal terminal alternative
-  Recommendation: REMOVE - You use Ghostty
-
 ✗ Hardware Locality Lstopo (hwloc)
   Purpose: CPU/memory topology visualization for HPC
   Why included: Performance optimization tool
@@ -272,7 +267,7 @@ all_bindings_to_remove=()
 
 # List of all apps and webapps we're removing
 apps_to_check=(
-    "1password-beta" "alacritty" "kdenlive" "libreoffice-still"
+    "1password-beta" "kdenlive" "libreoffice-still"
     "localsend" "obs-studio" "obsidian" "pinta" "spotify"
     "1password-cli" "typora" "wiremix" "xournalpp"
     "Basecamp" "Figma" "Fizzy" "Google Contacts" "Google Messages"
@@ -331,7 +326,6 @@ remove_webapp() {
 # Remove packages
 echo "━━━ Removing Packages ━━━"
 remove_package "1password-beta" "1Password"
-remove_package "alacritty" "Alacritty terminal"
 remove_package "kdenlive" "Kdenlive video editor"
 remove_package "libreoffice-still" "LibreOffice (old version)"
 remove_package "localsend" "LocalSend file sharing"
