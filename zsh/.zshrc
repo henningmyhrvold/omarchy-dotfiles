@@ -20,6 +20,11 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 alias ls='lsd -a'
 alias v='nvim'
 
+alias pi-team='pi -e ~/.pi/agent/extensions-standalone/agent-team.ts'
+alias pi-chain='pi -e ~/.pi/agent/extensions-standalone/agent-chain.ts'
+alias pi-pipi='pi -e ~/.pi/agent/extensions-standalone/pi-pi.ts'
+alias pi-tilldone='pi -e ~/.pi/agent/extensions-standalone/tilldone.ts'
+
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in $ZSH/themes/
