@@ -75,9 +75,9 @@ echo ""
 [[ ! $REPLY =~ ^[Yy]$ ]] && { echo "Aborted."; exit 0; }
 
 echo ""
-echo "━━━ Switching Terminal to foot ━━━"
-omarchy install terminal foot
-omarchy default terminal foot
+echo "━━━ Switching Terminal to ghostty ━━━"
+omarchy install terminal ghostty
+omarchy default terminal ghostty
 
 echo ""
 echo "━━━ Removing Webapps ━━━"
