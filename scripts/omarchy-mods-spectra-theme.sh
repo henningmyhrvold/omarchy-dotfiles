@@ -109,7 +109,7 @@ echo "==> Modifying Ghostty config..."
 # Modify Ghostty settings
 sed -i \
     -e 's/^background-opacity = 0\.6$/background-opacity = 0.95/' \
-    -e 's/^font-size = 11$/font-size = 12/' \
+    -e 's/^font-size = 11$/font-size = 11/' \
     "$GHOSTTY_CONF"
 
 # Add command = zsh if it doesn't exist (to launch zsh instead of bash)
@@ -147,7 +147,7 @@ echo "  • keyboard options: kb_options = grp:alt_shift_toggle (Alt+Shift to sw
 echo ""
 echo "GHOSTTY CHANGES:"
 echo "  • background-opacity: 0.6 → 0.95"
-echo "  • font-size: 11 → 12"
+echo "  • font-size: 11 → 11"
 echo "  • command: added/updated to 'zsh' (launches zsh shell)"
 echo ""
 echo "TO APPLY:"
