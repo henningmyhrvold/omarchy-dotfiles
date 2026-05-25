@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+# Restore user-level overrides after every theme change.
+#
+# Themes in omarchy 4.0 should only contain colors. These are personal
+# preferences that apply regardless of which theme is active (font sizes,
+# padding, opacity, shell, mako visibility rules).
+#
+# Re-runs safely: each block is delimited and replaced in place.
+
+set -euo pipefail
+
+BEGIN_MARK="# >>> user-overrides >>>"
+END_MARK="# <<< user-overrides <<<"
+
+upsert_block() {
+    local file="$1" content="$2"
+    mkdir -p "$(dirname "$file")"
+    touch "$file"
+
+    if grep -qF "$BEGIN_MARK" "$file"; then
+        local tmp; tmp=$(mktemp)
+        awk -v begin="$BEGIN_MARK" -v end="$END_MARK" -v content="$content" '
+            $0 == begin { print; print content; in_block=1; next }
+            $0 == end   { in_block=0; print; next }
+            !in_block   { print }
+        ' "$file" > "$tmp"
+        mv "$tmp" "$file"
+    else
+        printf '\n%s\n%s\n%s\n' "$BEGIN_MARK" "$content" "$END_MARK" >> "$file"
+    fi
+}
+
+upsert_block ~/.config/ghostty/config "$(cat <<'EOF'
+window-decoration = none
+command = zsh
+window-padding-x = 18
+window-padding-y = 14
+background-opacity = 0.95
+font-size = 11
+EOF
+)"
+
+upsert_block ~/.config/alacritty/alacritty.toml "$(cat <<'EOF'
+[window]
+decorations = "none"
+padding = { x = 18, y = 14 }
+opacity = 0.55
+
+[font]
+size = 11.0
+EOF
+)"
+
+upsert_block ~/.config/mako/config "$(cat <<'EOF'
+width=420
+height=110
+padding=10
+border-size=2
+font=Liberation Sans 11
+anchor=top-right
+outer-margin=20
+default-timeout=5000
+max-icon-size=32
+
+[app-name=Spotify]
+invisible=1
+
+[mode=do-not-disturb]
+invisible=true
+
+[mode=do-not-disturb app-name=notify-send]
+invisible=false
+EOF
+)"
+
+pkill -SIGUSR2 mako 2>/dev/null || true

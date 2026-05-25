@@ -1,23 +1,13 @@
 #!/bin/bash
 set -e
-# One-time Omarchy customizations — run once by bootstrap.sh
+# One-time Omarchy customizations
+sudo systemctl enable --now sshd
 
 # Install extra themes
-omarchy-theme-install https://github.com/abhijeet-swami/omarchy-ayaka-theme
-sleep 3
-omarchy-theme-install https://github.com/JaxonWright/omarchy-midnight-theme
-sleep 3
-omarchy-theme-install https://github.com/abhijeet-swami/omarchy-spectra-theme
+omarchy-theme-install https://github.com/henningmyhrvold/omarchy-spectra-theme
 sleep 3
 omarchy-theme-install https://github.com/bjarneo/omarchy-pulsar-theme
 sleep 3
-
-# Theme hook for additional theme support
-#curl -fsSL https://imbypass.github.io/omarchy-theme-hook/install.sh | bash
-#sleep 2
-curl -fsSL https://raw.githubusercontent.com/JacobusXIII/omarchy-wireguard-vpn-toggle/main/install.sh | bash
-sleep 3
-
 
 # ============================================================================
 # Omarchy Customizations
@@ -30,12 +20,12 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 
 # Customize Spectre theme (Hyprland blur, gaps, touchpad, Ghostty settings)
-if [ -f "./omarchy-mods-spectra-theme.sh" ]; then
-    echo "Customizing Spectre theme..."
-    bash ./omarchy-mods-spectra-theme.sh
-else
-    echo "⚠ Warning: omarchy-mods-spectra-theme.sh not found, skipping"
-fi
+#if [ -f "./omarchy-mods-spectra-theme.sh" ]; then
+#    echo "Customizing Spectre theme..."
+#    bash ./omarchy-mods-spectra-theme.sh
+#else
+#    echo "⚠ Warning: omarchy-mods-spectra-theme.sh not found, skipping"
+#fi
 
 echo ""
 
