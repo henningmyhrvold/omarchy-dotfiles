@@ -7,7 +7,6 @@ set -e
 PACKAGES=(
     1password-beta
     1password-cli
-    hwloc
     kdenlive
     libreoffice-still
     localsend
