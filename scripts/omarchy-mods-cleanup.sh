@@ -67,7 +67,7 @@ echo "TUIs to remove:      ${TUIS[*]}"
 echo ""
 echo "Bindings to remove:  ${BINDING_DESCRIPTIONS[*]}"
 echo ""
-echo "Terminal will be switched to foot."
+echo "Terminal will be switched to Ghostty."
 echo ""
 
 read -p "Proceed? (y/N) " -n 1 -r

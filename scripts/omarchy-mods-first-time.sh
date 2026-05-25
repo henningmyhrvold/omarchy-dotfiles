@@ -8,6 +8,7 @@ omarchy-theme-install https://github.com/henningmyhrvold/omarchy-spectra-theme
 sleep 3
 omarchy-theme-install https://github.com/bjarneo/omarchy-pulsar-theme
 sleep 3
+cp ~/src/omarchy-dotfiles/omarchy-hooks/theme-set ~/.config/omarchy/hooks/theme-set.d/
 
 # ============================================================================
 # Omarchy Customizations
