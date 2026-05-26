@@ -8,7 +8,6 @@ PACKAGES=(
     1password-beta
     1password-cli
     kdenlive
-    libreoffice-still
     localsend
     obs-studio
     pinta
