@@ -86,7 +86,23 @@ omarchy tui remove "${TUIS[@]}"
 
 echo ""
 echo "━━━ Removing Packages ━━━"
-sudo pacman -Rns --noconfirm "${PACKAGES[@]}"
+# Only pass packages that are actually installed. pacman -Rns exits non-zero on
+# an unknown target, and `set -e` would abort the rest of the script. Omarchy 4
+# no longer ships 1password-beta, 1password-cli, spotify, typora or wiremix.
+to_remove=()
+for pkg in "${PACKAGES[@]}"; do
+    if pacman -Qq "$pkg" &>/dev/null; then
+        to_remove+=("$pkg")
+    else
+        echo "  • skipping $pkg (not installed)"
+    fi
+done
+
+if (( ${#to_remove[@]} > 0 )); then
+    sudo pacman -Rns --noconfirm "${to_remove[@]}"
+else
+    echo "  Nothing to remove."
+fi
 
 echo ""
 echo "━━━ Cleaning Cache ━━━"

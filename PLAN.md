@@ -297,10 +297,10 @@ Also note the playbook clones this repo with `update: false`, so **Ansible will 
 
 | Step | Work | When |
 |---|---|---|
-| 1 | Fix the `theme-set.d` `cp` bug (§3.4) — pre-existing, unblocks the whole chain | **Now**, on 3.8.4 |
-| 2 | Delete `mcp/`, `omarchy-mods-alacritty.sh`, `omarchy-mods-spectra-theme.sh` (§5) | Now |
-| 3 | Fix the branding initramfs conditional (§4.1) — correct on both versions | Now |
-| 4 | Make `cleanup.sh` filter to installed packages (§3.3a) — correct on both versions | Now |
+| 1 | ~~Fix the `theme-set.d` `cp` bug (§3.4)~~ | **DONE** |
+| 2 | ~~Delete `mcp/`, `omarchy-mods-alacritty.sh`, `omarchy-mods-spectra-theme.sh` (§5)~~ | **DONE** |
+| 3 | ~~Fix the branding initramfs conditional (§4.1)~~ | **DONE** |
+| 4 | ~~Make `cleanup.sh` filter to installed packages (§3.3a)~~ | **DONE** |
 | 5 | **Upgrade:** `omarchy-upgrade-to-quattro`, reboot | — |
 | 6 | Remove the npm-global PATH line from `.zshrc`, in lockstep with the playbook (§3.6, §6) | After 5 |
 | 7 | Rewrite `hyprland-global.sh` to append a Lua block (§3.2) | After 5 |

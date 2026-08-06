@@ -8,6 +8,7 @@ omarchy-theme-install https://github.com/henningmyhrvold/omarchy-spectra-theme
 sleep 3
 omarchy-theme-install https://github.com/bjarneo/omarchy-pulsar-theme
 sleep 3
+mkdir -p ~/.config/omarchy/hooks/theme-set.d
 cp ~/src/omarchy-dotfiles/omarchy-hooks/theme-set ~/.config/omarchy/hooks/theme-set.d/
 
 # ============================================================================
@@ -18,16 +19,6 @@ echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  Running Omarchy Customizations"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-
-# Customize Spectre theme (Hyprland blur, gaps, touchpad, Ghostty settings)
-#if [ -f "./omarchy-mods-spectra-theme.sh" ]; then
-#    echo "Customizing Spectre theme..."
-#    bash ./omarchy-mods-spectra-theme.sh
-#else
-#    echo "⚠ Warning: omarchy-mods-spectra-theme.sh not found, skipping"
-#fi
-
 echo ""
 
 # Change Waybar logo to Arch Linux

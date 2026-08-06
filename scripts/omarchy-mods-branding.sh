@@ -87,7 +87,13 @@ else
     echo "  ✔ Plymouth logo replaced"
     echo ""
     echo "  Rebuilding initramfs to include the new logo..."
-    sudo mkinitcpio -P
+    # Mirror omarchy-refresh-plymouth: Limine systems need limine-mkinitcpio,
+    # otherwise the boot entry is not updated with the new initramfs.
+    if command -v limine-mkinitcpio &>/dev/null; then
+        sudo limine-mkinitcpio
+    else
+        sudo mkinitcpio -P
+    fi
     echo "  ✔ Initramfs rebuilt"
 fi
 
