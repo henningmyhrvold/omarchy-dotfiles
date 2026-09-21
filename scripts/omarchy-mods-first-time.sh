@@ -4,9 +4,11 @@ set -e
 sudo systemctl enable --now sshd
 
 # Install extra themes
-omarchy-theme-install https://github.com/henningmyhrvold/omarchy-spectra-theme
+omarchy theme install https://github.com/henningmyhrvold/omarchy-spectra-theme
 sleep 3
-omarchy-theme-install https://github.com/bjarneo/omarchy-pulsar-theme
+omarchy theme install https://github.com/vale-c/omarchy-arc-blueberry
+sleep 3
+omarchy theme install https://github.com/ferlemes/omarchy-red-pill-theme.git
 sleep 3
 mkdir -p ~/.config/omarchy/hooks/theme-set.d
 cp ~/src/omarchy-dotfiles/omarchy-hooks/theme-set ~/.config/omarchy/hooks/theme-set.d/
