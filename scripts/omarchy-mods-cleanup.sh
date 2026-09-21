@@ -5,22 +5,13 @@ set -e
 # Removes pre-installed software you don't need, using omarchy's own commands.
 
 PACKAGES=(
-    1password-beta
-    1password-cli
     kdenlive
-    localsend
     obs-studio
-    pinta
-    spotify
-    typora
-    wiremix
     xournalpp
 )
 
 WEBAPPS=(
     Basecamp
-    Figma
-    Fizzy
     "Google Contacts"
     "Google Messages"
     "Google Photos"
@@ -28,6 +19,7 @@ WEBAPPS=(
     WhatsApp
     X
     Zoom
+    YouTube
 )
 
 TUIS=(
