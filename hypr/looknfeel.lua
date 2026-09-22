@@ -1,8 +1,8 @@
 -- Personal geometry applies to every theme; colors come from the active theme.
 hl.config({
-  general = { gaps_in = 5, gaps_out = 10, border_size = 1 },
+  general = { gaps_in = 3, gaps_out = 6, border_size = 2 },
   decoration = {
-    rounding = 12,
+    rounding = 0,
     shadow = { enabled = true, range = 18, render_power = 3, color = "rgba(00000035)" },
     blur = { enabled = true, size = 6, passes = 3, new_optimizations = true, ignore_opacity = true },
   },
