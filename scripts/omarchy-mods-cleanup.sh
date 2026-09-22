@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
+SCRIPT_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 
 # Omarchy Software Removal Script
 # Removes pre-installed software you don't need, using omarchy's own commands.
@@ -26,8 +27,7 @@ TUIS=(
     "Disk Usage"
 )
 
-# Hyprland binding descriptions to remove (the 3rd comma-separated field in a bindd line).
-# Match the "Description" exactly as it appears in bindings.conf.
+# Descriptions matched against the currently loaded bindings, including defaults.
 BINDING_DESCRIPTIONS=(
     "Music"
     "Typora"
@@ -40,9 +40,11 @@ BINDING_DESCRIPTIONS=(
     "Google Photos"
     "X"
     "X Post"
+    "New email"
+    "YouTube"
 )
 
-BINDINGS_FILE="$HOME/.config/hypr/bindings.conf"
+BINDINGS_FILE="$HOME/.config/hypr/bindings.lua"
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  Omarchy Software Cleanup"
@@ -66,15 +68,21 @@ echo ""
 echo ""
 echo "━━━ Switching Terminal to ghostty ━━━"
 omarchy install terminal ghostty
+command -v ghostty >/dev/null
 omarchy default terminal ghostty
+bash "$SCRIPT_DIR/../omarchy-hooks/theme-set"
 
 echo ""
 echo "━━━ Removing Webapps ━━━"
-omarchy webapp remove "${WEBAPPS[@]}"
+for app in "${WEBAPPS[@]}"; do
+    OMARCHY_REMOVE_NOTIFY=false omarchy webapp remove "$app"
+done
 
 echo ""
 echo "━━━ Removing TUIs ━━━"
-omarchy tui remove "${TUIS[@]}"
+for app in "${TUIS[@]}"; do
+    OMARCHY_REMOVE_NOTIFY=false omarchy tui remove "$app"
+done
 
 echo ""
 echo "━━━ Removing Packages ━━━"
@@ -97,24 +105,12 @@ else
 fi
 
 echo ""
-echo "━━━ Cleaning Cache ━━━"
-sudo pacman -Sc --noconfirm
-yay -Sc --noconfirm
-
-echo ""
 echo "━━━ Cleaning Hyprland Bindings ━━━"
 if [[ -f "$BINDINGS_FILE" ]]; then
-    cp "$BINDINGS_FILE" "$BINDINGS_FILE.bak"
-    echo "  Backup: $BINDINGS_FILE.bak"
-
-    for desc in "${BINDING_DESCRIPTIONS[@]}"; do
-        # Escape regex metacharacters in the description, then match a bindd line
-        # whose 3rd comma-separated field equals that description.
-        esc=$(printf '%s' "$desc" | sed 's/[][\/.^$*]/\\&/g')
-        if sed -i "/^bindd[[:space:]]*=[^,]*,[^,]*,[[:space:]]*${esc}[[:space:]]*,/d" "$BINDINGS_FILE"; then
-            echo "  ✓ Removed binding: $desc"
-        fi
-    done
+    python "$SCRIPT_DIR/cleanup-bindings.py" "$BINDINGS_FILE" "${BINDING_DESCRIPTIONS[@]}"
+    hyprctl reload
+    errors=$(hyprctl configerrors)
+    [[ -z ${errors//[[:space:]]/} ]] || { echo "$errors" >&2; exit 1; }
 fi
 
 echo ""
@@ -122,6 +118,5 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "  Cleanup Complete!"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "Reload Hyprland to apply changes:"
-echo "  Super+Shift+R"
+echo "Hyprland bindings have been reloaded."
 echo ""

@@ -1,76 +1,64 @@
 #!/usr/bin/env bash
-# Restore user-level overrides after every theme change.
-#
-# Themes in omarchy 4.0 should only contain colors. These are personal
-# preferences that apply regardless of which theme is active (font sizes,
-# padding, opacity, shell, mako visibility rules).
-#
-# Re-runs safely: each block is delimited and replaced in place.
-
+# Omarchy invokes hooks with bash, regardless of the shebang.
 set -euo pipefail
+python <<'PY'
+"""Persistent terminal preferences; Omarchy owns the generated theme colors."""
 
-BEGIN_MARK="# >>> user-overrides >>>"
-END_MARK="# <<< user-overrides <<<"
+from datetime import datetime
+import os
+from pathlib import Path
+import re
+import shutil
+import subprocess
+import tempfile
 
-upsert_block() {
-    local file="$1" content="$2"
-    mkdir -p "$(dirname "$file")"
-    touch "$file"
 
-    if grep -qF "$BEGIN_MARK" "$file"; then
-        local tmp; tmp=$(mktemp)
-        awk -v begin="$BEGIN_MARK" -v end="$END_MARK" -v content="$content" '
-            $0 == begin { print; print content; in_block=1; next }
-            $0 == end   { in_block=0; print; next }
-            !in_block   { print }
-        ' "$file" > "$tmp"
-        mv "$tmp" "$file"
-    else
-        printf '\n%s\n%s\n%s\n' "$BEGIN_MARK" "$content" "$END_MARK" >> "$file"
-    fi
-}
+def apply():
+    home = Path.home()
+    config = home / ".config/ghostty/config"
+    if not config.exists() and not shutil.which("ghostty"):
+        print("Ghostty not installed; terminal preferences will apply after installation.")
+        return
+    config = config.resolve()
+    stock = Path(os.environ.get("OMARCHY_PATH", "/usr/share/omarchy")) / "config/ghostty/config"
+    old = config.read_text() if config.exists() else stock.read_text()
+    begin, end = "# >>> user-overrides >>>", "# <<< user-overrides <<<"
+    if old.count(begin) != old.count(end) or old.count(begin) > 1:
+        raise ValueError("Malformed Ghostty user-overrides block")
+    base = re.sub(re.escape(begin) + r".*?" + re.escape(end) + r"\n?", "", old, flags=re.S)
+    preferences = [
+        "window-decoration = none",
+        "window-padding-x = 18",
+        "window-padding-y = 14",
+        "background-opacity = 0.95",
+        "font-size = 11",
+    ]
+    # A fresh stock install has bash; don't make Ghostty launch a missing shell.
+    if shutil.which("zsh"):
+        preferences.append("command = zsh")
+    updated = base.rstrip() + "\n\n" + begin + "\n" + "\n".join(preferences) + "\n" + end + "\n"
+    if updated == old:
+        return
+    config.parent.mkdir(parents=True, exist_ok=True)
+    if config.exists():
+        backup = config.with_name(f".config.backup-{datetime.now():%Y%m%d-%H%M%S-%f}")
+        shutil.copy2(config, backup)
+        print(f"Backup: {backup}")
+    fd, temporary = tempfile.mkstemp(dir=config.parent, prefix=".config.")
+    try:
+        with os.fdopen(fd, "w") as stream:
+            stream.write(updated)
+        os.chmod(temporary, config.stat().st_mode & 0o777 if config.exists() else 0o644)
+        os.replace(temporary, config)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+    # Theme hooks run AFTER Omarchy's terminal reload; reload again if we edited.
+    if os.environ.get("HYPRLAND_INSTANCE_SIGNATURE"):
+        subprocess.run(["omarchy", "restart", "terminal"], check=True)
+    print(f"Changed: {config}")
 
-upsert_block ~/.config/ghostty/config "$(cat <<'EOF'
-window-decoration = none
-command = zsh
-window-padding-x = 18
-window-padding-y = 14
-background-opacity = 0.95
-font-size = 11
-EOF
-)"
 
-upsert_block ~/.config/alacritty/alacritty.toml "$(cat <<'EOF'
-[window]
-decorations = "none"
-padding = { x = 18, y = 14 }
-opacity = 0.55
-
-[font]
-size = 11.0
-EOF
-)"
-
-upsert_block ~/.config/mako/config "$(cat <<'EOF'
-width=420
-height=110
-padding=10
-border-size=2
-font=Liberation Sans 11
-anchor=top-right
-outer-margin=20
-default-timeout=5000
-max-icon-size=32
-
-[app-name=Spotify]
-invisible=1
-
-[mode=do-not-disturb]
-invisible=true
-
-[mode=do-not-disturb app-name=notify-send]
-invisible=false
-EOF
-)"
-
-pkill -SIGUSR2 mako 2>/dev/null || true
+if __name__ == "__main__":
+    apply()
+PY

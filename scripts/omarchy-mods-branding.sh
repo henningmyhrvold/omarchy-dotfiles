@@ -18,7 +18,8 @@ set -e
 #   ~/src/omarchy-dotfiles/logo/arch.txt  (ASCII art for screensaver)
 #   ~/src/omarchy-dotfiles/logo/arch.png  (PNG image for Plymouth boot/shutdown)
 
-DOTFILES_DIR="$HOME/src/omarchy-dotfiles/logo"
+SCRIPT_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
+DOTFILES_DIR="$SCRIPT_DIR/../logo"
 ASCII_SOURCE="$DOTFILES_DIR/arch.txt"
 PNG_SOURCE="$DOTFILES_DIR/arch.png"
 
@@ -106,9 +107,9 @@ echo "SUMMARY:"
 echo "  • Screensaver (ASCII):      $BRANDING_DIR/screensaver.txt"
 echo "  • Plymouth (boot/shutdown): $PLYMOUTH_THEME_DIR/logo.png"
 echo ""
-echo "NOTE: Plymouth changes require sudo and survive omarchy-update,"
-echo "but may be overwritten by major Omarchy upgrades. Re-run after"
-echo "major updates if the logo reverts."
+echo "NOTE: Plymouth changes require sudo. Package updates, omarchy refresh"
+echo "plymouth, and Plymouth theme changes can overwrite this logo."
+echo "Re-run this optional script if it reverts."
 echo ""
 echo "TO TEST:"
 echo "  Screensaver: Omarchy Menu > Trigger > Toggle > Screensaver"

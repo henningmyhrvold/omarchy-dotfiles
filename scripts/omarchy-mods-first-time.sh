@@ -1,69 +1,27 @@
-#!/bin/bash
-set -e
-# One-time Omarchy customizations
+#!/usr/bin/env bash
+# Interactive post-install entry point; works from any working directory.
+set -euo pipefail
+SCRIPT_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
+if [[ ${1:-} == --desktop-only ]]; then
+    shift
+    exec bash "$SCRIPT_DIR/omarchy-mods-desktop.sh" "$@"
+fi
+if (( $# )); then
+    echo 'Usage: omarchy-mods-first-time.sh [--desktop-only]' >&2
+    exit 1
+fi
+trap 'echo "Setup stopped at line $LINENO. Fix the error above and rerun; completed desktop edits are idempotent." >&2' ERR
+
+[[ $(omarchy version) == 4.* ]] || { echo 'Omarchy 4 is required.' >&2; exit 1; }
+THEME_DIR=${SPECTRA_THEME_DIR:-$(dirname "$(dirname "$SCRIPT_DIR")")/omarchy-spectra-theme}
+if [[ ! -d "$THEME_DIR" ]]; then
+    git clone https://github.com/henningmyhrvold/omarchy-spectra-theme.git "$THEME_DIR"
+fi
+export SPECTRA_THEME_DIR="$THEME_DIR"
+
 sudo systemctl enable --now sshd
-
-# Install extra themes
-omarchy theme install https://github.com/henningmyhrvold/omarchy-spectra-theme
-sleep 3
-omarchy theme install https://github.com/vale-c/omarchy-arc-blueberry
-sleep 3
-omarchy theme install https://github.com/ferlemes/omarchy-red-pill-theme.git
-sleep 3
-mkdir -p ~/.config/omarchy/hooks/theme-set.d
-cp ~/src/omarchy-dotfiles/omarchy-hooks/theme-set ~/.config/omarchy/hooks/theme-set.d/
-
-# ============================================================================
-# Omarchy Customizations
-# ============================================================================
-
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  Running Omarchy Customizations"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-
-# Change Waybar logo to Arch Linux
-if [ -f "./omarchy-mods-waybar.sh" ]; then
-    echo "Changing Waybar logo..."
-    bash ./omarchy-mods-waybar.sh
-else
-    echo "⚠ Warning: omarchy-mods-waybar.sh not found, skipping"
-fi
-
-echo ""
-
-# Change input trackpad and language to Arch Linux
-if [ -f "./omarchy-mods-hyprland-global.sh" ]; then
-    echo "Changing input trackpad and language..."
-    bash ./omarchy-mods-hyprland-global.sh
-else
-    echo "⚠ Warning: omarchy-mods-hyprland-global.sh not found, skipping"
-fi
-
-echo ""
-
-# Clean up unwanted applications
-if [ -f "./omarchy-mods-branding.sh" ]; then
-    echo "Branding..."
-    bash ./omarchy-mods-branding.sh
-else
-    echo "⚠ Warning: omarchy-mods-branding.sh not found, skipping"
-fi
-
-# Clean up unwanted applications
-if [ -f "./omarchy-mods-cleanup.sh" ]; then
-    echo "Cleaning up unwanted software..."
-    bash ./omarchy-mods-cleanup.sh
-else
-    echo "⚠ Warning: omarchy-mods-cleanup.sh not found, skipping"
-fi
-
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  Omarchy Customizations Complete!"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "Please reload Hyprland to apply all changes:"
-echo "  Press: Super+Shift+R"
-echo ""
+omarchy install terminal ghostty
+command -v ghostty >/dev/null
+bash "$SCRIPT_DIR/omarchy-mods-desktop.sh"
+bash "$SCRIPT_DIR/omarchy-mods-cleanup.sh"
+echo 'Setup complete. Optional boot-logo customization: bash scripts/omarchy-mods-branding.sh'

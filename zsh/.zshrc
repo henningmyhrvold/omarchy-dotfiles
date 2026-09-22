@@ -17,7 +17,6 @@ export ZSH=/usr/share/oh-my-zsh/
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
-alias ls='lsd -a'
 alias v='nvim'
 
 alias pi-team='pi -e ~/.pi/agent/extensions-standalone/agent-team.ts'
@@ -85,7 +84,7 @@ alias pi-tilldone='pi -e ~/.pi/agent/extensions-standalone/tilldone.ts'
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git asdf zsh-autosuggestions)
+plugins=(git zsh-autosuggestions)
 
 bindkey '^ ' autosuggest-accept
 
@@ -143,13 +142,16 @@ if [[ -x /usr/bin/fzf ]]; then
   source <(fzf --zsh)
 fi
 
-# Source Omarchy's shell aliases (gcam, ff, zoxide, etc.) in zsh
-# The 2>/dev/null silences errors if any bash-only syntax sneaks in
-source ~/.local/share/omarchy/default/bash/aliases 2>/dev/null
+# Use Omarchy's package location and activate the tools for zsh explicitly.
+export OMARCHY_PATH="${OMARCHY_PATH:-/usr/share/omarchy}"
+[[ ! -r "$OMARCHY_PATH/default/bash/aliases" ]] || source "$OMARCHY_PATH/default/bash/aliases"
+alias ls='eza -a --group-directories-first --icons=auto'
+(( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
 
 # Go environment
-export GOPATH="/home/henning/go"
-export GOBIN="/home/henning/go/bin"
-export PATH="/home/henning/go/bin:$PATH"
-# npm environment
-export PATH="/home/henning/.npm-global/bin:$PATH"
+export GOPATH="$HOME/go"
+export GOBIN="$GOPATH/bin"
+# Quattro's lazy agent shims and mise own tool resolution.
+typeset -U path
+path=("$HOME/.local/bin" "$GOBIN" $path)
+(( $+commands[mise] )) && eval "$(mise activate zsh)"
