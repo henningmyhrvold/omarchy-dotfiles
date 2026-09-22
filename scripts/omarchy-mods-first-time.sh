@@ -20,8 +20,9 @@ fi
 export SPECTRA_THEME_DIR="$THEME_DIR"
 
 sudo systemctl enable --now sshd
-omarchy install terminal ghostty
-command -v ghostty >/dev/null
 bash "$SCRIPT_DIR/omarchy-mods-desktop.sh"
 bash "$SCRIPT_DIR/omarchy-mods-cleanup.sh"
-echo 'Setup complete. Optional boot-logo customization: bash scripts/omarchy-mods-branding.sh'
+bash "$SCRIPT_DIR/omarchy-mods-branding.sh"
+bash "$SCRIPT_DIR/omarchy-mods-hyprland-global.sh"
+bash "$SCRIPT_DIR/omarchy-mods-shell.sh"
+echo 'Setup complete.'

@@ -27,25 +27,6 @@ TUIS=(
     "Disk Usage"
 )
 
-# Descriptions matched against the currently loaded bindings, including defaults.
-BINDING_DESCRIPTIONS=(
-    "Music"
-    "Typora"
-    "Passwords"
-    "Email"
-    "Grok"
-    "Calendar"
-    "WhatsApp"
-    "Google Messages"
-    "Google Photos"
-    "X"
-    "X Post"
-    "New email"
-    "YouTube"
-)
-
-BINDINGS_FILE="$HOME/.config/hypr/bindings.lua"
-
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  Omarchy Software Cleanup"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -55,8 +36,6 @@ echo ""
 echo "Webapps to remove:   ${WEBAPPS[*]}"
 echo ""
 echo "TUIs to remove:      ${TUIS[*]}"
-echo ""
-echo "Bindings to remove:  ${BINDING_DESCRIPTIONS[*]}"
 echo ""
 echo "Terminal will be switched to Ghostty."
 echo ""
@@ -87,8 +66,7 @@ done
 echo ""
 echo "━━━ Removing Packages ━━━"
 # Only pass packages that are actually installed. pacman -Rns exits non-zero on
-# an unknown target, and `set -e` would abort the rest of the script. Omarchy 4
-# no longer ships 1password-beta, 1password-cli, spotify, typora or wiremix.
+# an unknown target, and `set -e` would abort the rest of the script.
 to_remove=()
 for pkg in "${PACKAGES[@]}"; do
     if pacman -Qq "$pkg" &>/dev/null; then
@@ -102,15 +80,6 @@ if (( ${#to_remove[@]} > 0 )); then
     sudo pacman -Rns --noconfirm "${to_remove[@]}"
 else
     echo "  Nothing to remove."
-fi
-
-echo ""
-echo "━━━ Cleaning Hyprland Bindings ━━━"
-if [[ -f "$BINDINGS_FILE" ]]; then
-    python "$SCRIPT_DIR/cleanup-bindings.py" "$BINDINGS_FILE" "${BINDING_DESCRIPTIONS[@]}"
-    hyprctl reload
-    errors=$(hyprctl configerrors)
-    [[ -z ${errors//[[:space:]]/} ]] || { echo "$errors" >&2; exit 1; }
 fi
 
 echo ""
