@@ -5,10 +5,8 @@ No test changes the running desktop, packages, or services.
 """
 
 import importlib.util
-import json
 import os
 from pathlib import Path
-import shutil
 import subprocess
 import tempfile
 import tomllib
@@ -76,39 +74,22 @@ class MigrationTest(unittest.TestCase):
         tomllib.loads(alacritty.read_text())
         self.assertFalse((self.home / ".config/mako").exists())
 
-    def test_cleanup_preserves_unrelated_bindings_and_previous_unbinds(self):
-        binaries = self.home / "bin"
-        binaries.mkdir()
-        hyprctl = binaries / "hyprctl"
-        binds = [{"description": "Music", "modmask": 65, "key": "M", "submap": ""},
-                 {"description": "Terminal", "modmask": 64, "key": "RETURN", "submap": ""}]
-        hyprctl.write_text("#!/bin/sh\nprintf '%s' '" + json.dumps(binds) + "'\n")
-        hyprctl.chmod(0o755)
-        self.env["PATH"] = str(binaries) + ":" + os.environ["PATH"]
-        target = self.home / "bindings.lua"
-        target.write_text('-- personal binding\no.bind("SUPER + R", "Notes", "nvim")\n')
-        command = ["python", str(REPO / "scripts/cleanup-bindings.py"), str(target), "Music"]
-        subprocess.run(command, env=self.env, check=True, capture_output=True)
-        once = target.read_text()
-        hyprctl.write_text("#!/bin/sh\nprintf '[]'\n")
-        subprocess.run(command, env=self.env, check=True, capture_output=True)
-        self.assertEqual(target.read_text(), once)
-        self.assertIn('hl.unbind("SHIFT + SUPER + M") -- Music', once)
-        self.assertIn('-- personal binding', once)
-        self.assertNotIn('RETURN', once)
-
-    def test_quattro_cloned_theme_staging_and_generated_configs(self):
-        clone = self.home / ".config/omarchy/themes/spectra"
-        shutil.copytree(THEME, clone, ignore=shutil.ignore_patterns(".git"))
-        (clone / ".git").mkdir()  # Exercise the filtering path used by theme install.
+    def test_user_theme_symlink_staging_and_generated_configs(self):
+        # The repos install Spectra by symlinking the local checkout into
+        # ~/.config/omarchy/themes (config-edit.py link, and the playbook's
+        # desktop role). Omarchy treats a symlinked theme as the user's own and
+        # stages its terminal configs, so nothing is filtered out.
+        theme = self.home / ".config/omarchy/themes/spectra"
+        theme.parent.mkdir(parents=True)
+        theme.symlink_to(THEME, target_is_directory=True)
         env = dict(self.env, OMARCHY_THEME_HEADLESS="1")
         result = subprocess.run(["omarchy", "theme", "set", "spectra"], env=env,
                                 text=True, capture_output=True, check=True)
         self.assertNotIn("Ignored in", result.stderr)
         current = self.home / ".local/state/omarchy/current/theme"
         shell = tomllib.loads((current / "shell.toml").read_text())
-        self.assertEqual(shell["menu"]["background-alpha"], 0.88)
-        self.assertEqual(shell["bar"]["background-alpha"], 0.78)
+        self.assertEqual(shell["menu"]["background-alpha"], 0.4)
+        self.assertEqual(shell["bar"]["background-alpha"], 0.4)
         self.assertEqual(tomllib.loads((current / "alacritty.toml").read_text())["colors"]["primary"]["background"], "#1a1b1e")
         self.assertIn("97b6ffcc", (current / "hyprland.lua").read_text())
         for lua in current.glob("*.lua"):

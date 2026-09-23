@@ -3,7 +3,6 @@
 
 import argparse
 from datetime import datetime
-import json
 import os
 from pathlib import Path
 import shutil
@@ -61,7 +60,7 @@ def block(text, content, marker):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=["block", "copy", "link", "backup", "shell"])
+    parser.add_argument("action", choices=["block", "copy", "link", "backup"])
     parser.add_argument("target", type=Path)
     parser.add_argument("source", nargs="?", type=Path)
     parser.add_argument("--marker", default="omarchy-dotfiles")
@@ -69,10 +68,6 @@ def main():
     target = args.target.expanduser()
     if args.action == "backup":
         backup(target)
-    elif args.action == "shell":
-        config = json.loads(target.read_text())
-        config.setdefault("bar", {})["transparent"] = False
-        write(target, (json.dumps(config, indent=2) + "\n").encode())
     elif args.source is None:
         parser.error("source is required")
     elif args.action == "link":

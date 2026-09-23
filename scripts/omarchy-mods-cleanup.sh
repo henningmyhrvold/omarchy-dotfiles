@@ -87,5 +87,3 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "  Cleanup Complete!"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "Hyprland bindings have been reloaded."
-echo ""

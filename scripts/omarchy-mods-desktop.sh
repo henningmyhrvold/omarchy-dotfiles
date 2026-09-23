@@ -16,7 +16,6 @@ python "$SCRIPT_DIR/config-edit.py" block "$HOME/.config/hypr/looknfeel.lua" "$D
 hyprctl reload
 errors=$(hyprctl configerrors)
 [[ -z ${errors//[[:space:]]/} ]] || { echo "$errors" >&2; exit 1; }
-bash "$SCRIPT_DIR/omarchy-mods-shell.sh"
 
 # Keep the hook in the checkout so rerunning/pulling dotfiles updates it too.
 python "$SCRIPT_DIR/config-edit.py" link "$HOME/.config/omarchy/hooks/theme-set.d/terminal-preferences" "$DOTFILES_DIR/omarchy-hooks/theme-set"

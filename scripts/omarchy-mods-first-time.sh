@@ -24,5 +24,4 @@ bash "$SCRIPT_DIR/omarchy-mods-desktop.sh"
 bash "$SCRIPT_DIR/omarchy-mods-cleanup.sh"
 bash "$SCRIPT_DIR/omarchy-mods-branding.sh"
 bash "$SCRIPT_DIR/omarchy-mods-hyprland-global.sh"
-bash "$SCRIPT_DIR/omarchy-mods-shell.sh"
 echo 'Setup complete.'

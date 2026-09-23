@@ -3,3 +3,4 @@
 .claude/
 concat_gipity.py
 project_code.txt
+__pycache__/
