@@ -23,5 +23,6 @@ sudo systemctl enable --now sshd
 bash "$SCRIPT_DIR/omarchy-mods-desktop.sh"
 bash "$SCRIPT_DIR/omarchy-mods-cleanup.sh"
 bash "$SCRIPT_DIR/omarchy-mods-branding.sh"
+bash "$SCRIPT_DIR/omarchy-mods-bar-logo.sh"
 bash "$SCRIPT_DIR/omarchy-mods-hyprland-global.sh"
 echo 'Setup complete.'

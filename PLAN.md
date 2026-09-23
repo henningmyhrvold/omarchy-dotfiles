@@ -52,6 +52,15 @@ Where something could not be confirmed without a running Quattro system, it is m
 
 ### 3.1 `omarchy-mods-waybar.sh` — Waybar no longer exists
 
+**Resolved:** implemented as `scripts/omarchy-mods-bar-logo.sh`, which does a
+two-token `sed` on the package-owned `shell/plugins/menu/BarWidget.qml`
+(`text: "\ue900"` → `"\uf303"`, `fontFamily: "omarchy"` →
+`"JetBrainsMono Nerd Font"`), then `omarchy-restart-shell`. This leaves the
+menu harness intact (the clone route below was rejected because cloning
+`omarchy.menu` disables the first-party menu and broke the launcher). The
+downside is that `omarchy-update` reverts the patch, so the script is re-run
+after updates — same contract as `omarchy-mods-branding.sh`.
+
 Quattro deletes Waybar entirely; the bar is a Quickshell plugin. `~/.config/waybar/config.jsonc` will not exist, so the script hits its guard and exits 1 — which also aborts `first-time.sh` (§3.4).
 
 **Where the logo actually lives now.** It is *not* a `shell.json` setting. It is hardcoded in the menu plugin's bar widget, `shell/plugins/menu/BarWidget.qml`:
@@ -306,7 +315,7 @@ Also note the playbook clones this repo with `update: false`, so **Ansible will 
 | 7 | Rewrite `hyprland-global.sh` to append a Lua block (§3.2) | After 5 |
 | 8 | Strip the mako block from `theme-set`; guard the alacritty block (§3.5) | After 5 |
 | 9 | Rewrite `cleanup.sh` bindings + webapp lists against Lua/Quattro (§3.3b, §3.3c) | After 5 |
-| 10 | Build the bar-widget plugin and rewrite `waybar.sh` → `shell.sh` (§3.1) | After 5 |
+| 10 | ~~Replace the bar glyph — done via `omarchy-mods-bar-logo.sh` sed patch (§3.1)~~ | **DONE** |
 | 11 | Port the spectra theme in its own repo; restore the `theme-install` line (§3.7) | Separate |
 
 Steps 1–4 are safe on 3.8.4 today and are worth doing regardless of the upgrade.
