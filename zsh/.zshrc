@@ -155,3 +155,5 @@ export GOBIN="$GOPATH/bin"
 typeset -U path
 path=("$HOME/.local/bin" "$GOBIN" $path)
 (( $+commands[mise] )) && eval "$(mise activate zsh)"
+
+. "$HOME/.local/share/../bin/env"

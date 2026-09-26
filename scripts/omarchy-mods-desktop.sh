@@ -25,4 +25,5 @@ omarchy theme set spectra
 hyprctl reload
 errors=$(hyprctl configerrors)
 [[ -z ${errors//[[:space:]]/} ]] || { echo "$errors" >&2; exit 1; }
+bash "$SCRIPT_DIR/omarchy-mods-lock.sh"
 echo 'Spectra desktop applied. Native Quattro notifications and DND are enabled.'
